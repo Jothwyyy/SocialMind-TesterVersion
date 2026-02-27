@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Inicio - SocialMind</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="sidebar" aria-label="Menú principal">
+            <div class="logo" tabindex="0">SocialMind</div>
+            <button class="btn btn-link p-0 mb-3" data-bs-toggle="modal" data-bs-target="#modalNotificaciones" style="color:#a259e6; font-size:2rem;" aria-label="Ver notificaciones">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14.804a1 1 0 0 0-1.208 0C5.255 2.412 2 5.07 2 9c0 .628-.134 1.197-.364 1.684A1.007 1.007 0 0 0 2.001 12h11.998a1.007 1.007 0 0 0 .365-1.316C14.134 10.197 14 9.628 14 9c0-3.93-3.255-6.588-5.896-7.804z"/>
+                </svg>
+            </button>
+            <ul>
+                <li><a href="/home" class="active" aria-current="page"><span>🏠 Inicio</span></a></li>
+                <li><a href="/ver_perfil/{{id_usuario}}"><span>👤 Mi Perfil</span></a></li>
+                <li><a href="/chats"><span>💬 Mensajes</span></a></li>
+                <li><a href="/grupos"><span>👥 Grupos</span></a></li>
+                <li><a href="/sugerencias"><span>💡 Sugerencias</span></a></li>
+            </ul>
+            <a href="/logout"><button class="btn_logout" aria-label="btn_logout">Cerrar sesión</button></a>
+        </nav>
+        <!-- Modal Notificaciones -->
+        <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background: #a259e6; color: #fff;">
+                        <h5 class="modal-title" id="modalNotificacionesLabel">Notificaciones</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" style="filter: invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            $if notificaciones:
+                                $for notificacion in notificaciones:
+                                    <li class="list-group-item d-flex align-items-start gap-3" style="border:none; border-bottom:1px solid #eee;">
+                                        <span class="mt-1" style="color:#a259e6; font-size:2rem;">🔔</span>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold" style="color:#a259e6;">Tipo: $notificacion[1]</div>
+                                            <div class="fw-bold">$notificacion[2]</div>
+                                            <div class="text-muted small mb-1">$notificacion[4]</div>
+                                            $if notificacion[3]:
+                                                <a href=$notificacion[3] class="btn btn-link btn-sm px-0" style="color:#a259e6; text-decoration:underline;">Ver mensaje</a>
+                                        </div>
+                                    </li>
+                                <li class="list-group-item text-center text-muted" style="border:none;">No tienes más notificaciones nuevas.</li>
+                            $else:
+                                <li class="list-group-item text-center text-muted">No tienes notificaciones nuevas.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <main class="main-content" tabindex="-1">
+            {%if rol == 2%}
+                <div class="mb-3 d-flex justify-content-end">
+                    <a href="/psychologistpanel" class="btn btn-outline-primary" style="background:#f3e8ff; border:2px solid #a259e6; color:#a259e6; font-weight:bold;">
+                        Volver al Panel Psicólogo
+                    </a>
+                </div>
+            {%elif rol == 3%}
+                <div class="mb-3 d-flex justify-content-end">
+                    <a href="/admin" class="btn btn-outline-primary" style="background:#f3e8ff; border:2px solid #a259e6; color:#a259e6; font-weight:bold;">
+                        Volver al Panel Administrador
+                    </a>
+                </div>
+            {%endif%}
+            <form method="get" class="mb-4 d-flex" style="max-width: 600px; margin: 0 auto 2rem auto; gap: 0.5rem;">
+                <label for="busqueda" class="form-label visually-hidden">Buscar grupos</label>
+                <div class="input-group flex-grow-1">
+                    <input type="text" id="busqueda" class="form-control form-control-lg" name="q" placeholder="Buscar grupos..." aria-label="Buscar grupos" value="">
+                    <button class="btn btn-primary btn-lg" type="submit">Buscar</button>
+                </div>
+    <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#modalPublicar" style="background-color: #a259e6; border-color: #a259e6;">Publicar</button>
+            </form>
+
+            <!-- Modal para publicar -->
+            <div class="modal fade" id="modalPublicar" tabindex="-1" aria-labelledby="modalPublicarLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content shadow-lg" style="background: #f3e8ff; border: 2px solid #a259e6; border-radius: 18px;">
+                        <form method="post" action="/nueva_publicacion" enctype="multipart/form-data">
+                            <div class="modal-header" style="background: #a259e6; color: #fff; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                                <h5 class="modal-title w-100 text-center" id="modalPublicarLabel" style="font-weight:bold;">¿Qué quieres compartir?</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" style="filter: invert(1);"></button>
+                            </div>
+                            <div class="modal-body py-4 px-4">
+                                <div class="mb-3">
+                                    <textarea id="contenido" name="contenido" class="form-control" rows="4" placeholder="Escribe tu publicación aquí..." required style="background: #fff0fa; border-color: #a259e6; border-radius: 10px;"></textarea>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="imagen" class="form-label">Subir imagen (opcional):</label>
+                                    <input class="form-control" type="file" id="imagen" name="imagen_post" accept="image/*" style="background: #fff; border-radius: 8px;">
+                                </div>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between" style="background: #f3e8ff; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+                                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary px-4" style="background-color: #a259e6; border-color: #a259e6; font-weight:bold;">Publicar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <h1 class="mb-2 text-center" style="font-weight:bold;">Inicio</h1>
+            <p class="text-center mb-4">Mira lo que otros están compartiendo en la comunidad.</p>
+
+
+
+            {%if publicaciones["data"]%}
+                {%for publicacion in publicaciones["data"]%}
+                    <article class="card" aria-labelledby="pub-${pub['id_pub']}-autor">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="/${pub['foto_perfil'] if pub['foto_perfil'] else 'static/perfiles/perfil_default/perfil.jpg'}" alt="Foto perfil" style="width:48px; height:48px; object-fit:cover; border-radius:50%; border:2.5px solid #a259e6; margin-right:10px;">
+                                <span id="pub-${pub['id_pub']}-autor" class="card-title flex-grow-1"><b><a href='/perfil?id=${pub['usuario']}'>${pub['autor']}</a></b> <small class="text-muted">- ${pub['fecha']}</small></span>
+                                <a href="/reportar/${pub['autor']}" class="ms-2 text-secondary" title="Reportar publicación" aria-label="Reportar publicación de ${pub['autor']}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" aria-hidden="true">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                            <p class="card-text" style="font-size:1.1rem;">${pub['contenido']}</p>
+                            $if pub['imagen']:
+                                <img src="${pub['imagen']}" alt="Imagen publicación" class="img-fluid rounded mb-3" style="max-height: 300px; object-fit: cover;">
+                            <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
+                                <form method="post" action="/like" class="d-inline" aria-label="Dar like a la publicación">
+                                    <input type="hidden" name="id_pub" value="${pub['id_pub']}">
+                                    <button type="submit" name="btn_like" class="btn btn-outline-primary btn-lg" style="min-width:90px;">
+                                        👍 Like <span class="badge bg-primary">${pub['likes']}</span>
+                                    </button>
+                                </form>
+                                <form method="post" action="/comentarios" class="d-flex flex-grow-1" style="gap: 0.5rem;" aria-label="Comentar en la publicación">
+                                    <input type="hidden" name="id_pub" value="${pub['id_pub']}">
+                                    <input type="text" name="comentario" required placeholder="Escribe un comentario..." class="form-control form-control-lg" aria-label="Escribe un comentario">
+                                    <button type="submit" name="btn_comentario" class="btn btn-outline-success btn-lg">Comentar</button>
+                                </form>
+                                <span class="text-muted" style="font-size:1.1rem;">Comentarios: <strong>${pub['comentarios']}</strong></span>
+                            </div>
+                            <button class="btn btn-link btn-lg p-0" type="button" data-bs-toggle="collapse" data-bs-target="#comentarios-${pub['id_pub']}" aria-expanded="false" aria-controls="comentarios-${pub['id_pub']}">
+                                Mostrar/Ocultar comentarios
+                            </button>
+                            $if pub['id_pub'] in comentarios_detalle:
+                                <div class="collapse mt-3 ps-3 border-start border-3 border-primary" id="comentarios-${pub['id_pub']}">
+                                    $for autor_c, texto_c, fecha_c, id_com, foto_perfil_c in comentarios_detalle[pub['id_pub']]:
+                                        <div class="d-flex align-items-center mb-1">
+                                            <img src="/${foto_perfil_c if foto_perfil_c else 'static/perfiles/perfil_default/perfil.jpg'}" alt="Foto perfil" style="width:36px; height:36px; object-fit:cover; border-radius:50%; border:2px solid #a259e6; margin-right:8px;">
+                                            <p class="mb-0 flex-grow-1"><b>${autor_c}</b>: ${texto_c} <small class="text-muted">(${fecha_c})</small></p>
+                                            <a href="/reportar/${autor_c}" class="ms-2 text-secondary" title="Reportar comentario" aria-label="Reportar comentario de ${autor_c}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                </div>
+                        </div>
+                    </article>
+                {%endfor%}
+            {%else%}
+                <p class="text-muted text-center" style="font-size:1.2rem;">No hay publicaciones todavía.</p>
+            {%endif%}
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

@@ -1,0 +1,155 @@
+<style>
+  body {
+    background: #f3e8ff;
+  }
+
+  .center-card {
+    max-width: 440px;
+    margin: 60px auto 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    border: 2.5px solid #a259e6;
+    box-shadow: 0 4px 24px rgba(162,89,230,0.10), 0 1.5px 8px rgba(0,0,0,0.10);
+    padding: 36px 36px 28px 36px;
+    text-align: center;
+  }
+
+  .center-card h1 {
+    color: #a259e6;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+
+  .center-card label {
+    display: block;
+    margin: 12px 0 4px 0;
+    color: #7c3aed;
+    font-weight: 500;
+    text-align: left;
+  }
+
+  .center-card input[type="text"] {
+    width: 100%;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1.5px solid #a259e6;
+    margin-bottom: 8px;
+    font-size: 1em;
+    background: #f3e8ff;
+    color: #4b2067;
+  }
+
+  .center-card input[type="file"] {
+    margin-bottom: 10px;
+  }
+
+  .center-card button {
+    background-color: #a259e6;
+    color: #fff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-top: 18px;
+    box-shadow: 0 2px 8px rgba(162,89,230,0.10);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    font-size: 1.1em;
+  }
+
+  .center-card button:hover {
+    background-color: #7c3aed;
+    transform: scale(1.06);
+  }
+
+  .center-card .img-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border: 2px solid #a259e6;
+  }
+
+  .center-card .cancel-link {
+    color: #a259e6;
+    text-decoration: underline;
+    display: inline-block;
+    margin-bottom: 18px;
+    font-weight: 500;
+  }
+</style>
+
+<div class="center-card">
+  <a href="/ver_perfil/{{ current_user_data['data']['id_usuario'] }}" class="cancel-link">
+    Cancelar
+  </a>
+
+  <h1>Editar perfil</h1>
+
+  {% if current_user_data.get('error') is not none %}
+    <div style="color:#b91c1c; font-weight:600; margin-bottom:12px;">
+      {{ current_user_data['error'] }}
+    </div>
+
+  {% elif not current_user_data.get('data') %}
+    <div style="color:#b91c1c; font-weight:600; margin-bottom:12px;">
+      No hay información para mostrar.
+    </div>
+
+  {% else %}
+    <form method="POST" action="" enctype="multipart/form-data">
+
+      <label>Nombre de usuario:</label>
+      <input type="text" name="username"
+             value="{{ current_user_data['data']['username'] }}" required>
+
+      <label>Nombre:</label>
+      <input type="text" name="inp_nombre"
+             value="{{ current_user_data['data']['nombre'] }}" readonly>
+
+      <label>Apellido paterno:</label>
+      <input type="text" name="inp_apellido_paterno"
+             value="{{ current_user_data['data']['apellido_paterno'] }}" readonly>
+
+      <label>Apellido materno:</label>
+      <input type="text" name="inp_apellido_materno"
+             value="{{ current_user_data['data']['apellido_materno'] }}" readonly>
+
+      <label>Descripción:</label>
+      <input type="text" name="descripcion"
+             value="{{ current_user_data['data']['descripcion'] }}" required>
+
+      <!-- Imagen de perfil -->
+      <label>Imagen de perfil:</label>
+      {% if current_user_data['data'].get('imagen_perfil') %}
+        <img src="{{ current_user_data['data']['imagen_path'] }}"
+             alt="Foto de perfil"
+             class="img-preview">
+      {% else %}
+        <div style="color:#a259e6; margin-bottom:8px;">
+          Sin foto de perfil
+        </div>
+      {% endif %}
+      <input type="file" name="imagen_perfil" accept="image/*">
+
+      <!-- Banner -->
+      <label>Banner:</label>
+      {% if current_user_data['data'].get('imagen_banner') %}
+        <img src="{{ current_user_data['data']['banner_path'] }}"
+             alt="Banner"
+             style="border-radius:12px; width:100%; height:60px; object-fit:cover;">
+      {% else %}
+        <div style="color:#a259e6; margin-bottom:8px;">
+          Sin banner
+        </div>
+      {% endif %}
+      <input type="file" name="imagen_banner" accept="image/*">
+
+      <button type="submit" name="btn_actualizar">
+        Actualizar
+      </button>
+
+    </form>
+  {% endif %}
+</div>

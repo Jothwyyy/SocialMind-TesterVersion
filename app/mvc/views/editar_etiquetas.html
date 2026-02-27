@@ -1,0 +1,108 @@
+<style>
+  body { background: #f3e8ff; }
+  .center-card {
+    max-width: 420px;
+    margin: 60px auto 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    border: 2.5px solid #a259e6;
+    box-shadow: 0 4px 24px rgba(162,89,230,0.10), 0 1.5px 8px rgba(0,0,0,0.10);
+    padding: 32px 32px 24px 32px;
+    text-align: center;
+  }
+  .center-card h1 {
+    color: #a259e6;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+  .center-card label {
+    display: inline-block;
+    margin: 5px 12px 5px 0;
+  }
+  .center-card button {
+    background-color: #a259e6;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(162,89,230,0.10);
+    cursor: pointer;
+    animation: pulse 1.2s infinite;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .center-card button:hover {
+    background-color: #7c3aed;
+    transform: scale(1.06);
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(162,89,230,0.25); }
+    70% { box-shadow: 0 0 0 10px rgba(162,89,230,0.05); }
+    100% { box-shadow: 0 0 0 0 rgba(162,89,230,0.0); }
+  }
+  .center-card a {
+    color: #a259e6;
+    text-decoration: underline;
+    display: inline-block;
+    margin-top: 18px;
+  }
+</style>
+
+<div class="center-card">
+  <h1>Editar Etiquetas</h1>
+  <form method="POST">
+    <div style="margin-bottom:18px;">
+      {%for interes in etiquetas %}
+        <label style="display:inline-block; margin:4px 6px 4px 0; cursor:pointer;">
+          <input type="checkbox" 
+            name="etiquetas"
+            value="{{ interes.id_interes }}" 
+            {% if interes.id_interes in tags_usuario %}checked{% endif %}>
+          <span class="etiqueta-btn">{{ interes.tipo_interes.capitalize() }}</span>
+        </label>
+      {%endfor%}
+</style>
+<style>
+  .etiqueta-btn {
+    display:inline-block;
+    background:#f3e8ff;
+    color:#7c3aed;
+    padding:4px 14px;
+    border-radius:20px;
+    font-size:0.95em;
+    border:1px solid #a259e6;
+    transition:all 0.2s;
+    font-weight:500;
+    user-select:none;
+  }
+</style>
+    </div>
+    <button type="submit">Guardar etiquetas</button>
+  </form>
+<script>
+// Resalta la etiqueta seleccionada
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.center-card label').forEach(function(label) {
+    var input = label.querySelector('input[type="checkbox"]');
+    var span = label.querySelector('span');
+    if(input && span) {
+      function update() {
+        if(input.checked) {
+          span.style.background = '#a259e6';
+          span.style.color = '#fff';
+          span.style.borderColor = '#7c3aed';
+        } else {
+          span.style.background = '#f3e8ff';
+          span.style.color = '#7c3aed';
+          span.style.borderColor = '#a259e6';
+        }
+      }
+      input.addEventListener('change', update);
+      update();
+    }
+  });
+});
+</script>
+  <a href="/ver_perfil/{{ id_usuario }}">Volver a perfil</a>
+</div>

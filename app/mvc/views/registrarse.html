@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro Psicólogo - SocialMind</title>
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: #fff;
+      }
+      .split-container {
+        display: flex;
+        min-height: 100vh;
+      }
+      .left-panel {
+        flex: 1;
+        background: linear-gradient(120deg, #5f6fff 0%, #a259e6 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        padding: 0 2vw;
+      }
+      .left-panel h2 {
+        font-size: 1.4em;
+        font-weight: 700;
+        margin-bottom: 18px;
+      }
+      .left-panel a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 12px 36px;
+        border: 2px solid #fff;
+        border-radius: 30px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.1em;
+        text-decoration: none;
+        background: transparent;
+        transition: background 0.2s, color 0.2s;
+      }
+      .left-panel a:hover {
+        background: #fff;
+        color: #a259e6;
+      }
+      .right-panel {
+        flex: 1;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 2vw;
+      }
+      .psy-form-card {
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(162,89,230,0.10), 0 1.5px 8px rgba(0,0,0,0.10);
+        padding: 36px 36px 28px 36px;
+        text-align: center;
+        border: none;
+      }
+      .psy-form-card h1 {
+        color: #111;
+        font-weight: 800;
+        font-size: 2.3em;
+        margin-bottom: 0.2em;
+        letter-spacing: 1px;
+      }
+      .psy-form-card h2 {
+        color: #222;
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-bottom: 1.2em;
+      }
+      .psy-input, .psy-select {
+        width: 100%;
+        padding: 13px 18px;
+        border-radius: 22px;
+        border: 2px solid #222;
+        margin-bottom: 18px;
+        font-size: 1em;
+        background: #fff;
+        color: #222;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+      }
+      .psy-input:focus, .psy-select:focus {
+        border-color: #a259e6;
+      }
+      .psy-label {
+        display: none;
+      }
+      .form-error {
+        color: #d9534f;
+        font-weight: 600;
+        margin-bottom: 1em;
+      }
+      .terms-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 18px;
+        font-size: 0.98em;
+      }
+      .terms-row input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+        margin-right: 8px;
+        accent-color: #a259e6;
+      }
+      .terms-row a {
+        color: #a259e6;
+        text-decoration: none;
+        margin-left: 4px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .terms-row a:hover {
+        color: #5f6fff;
+      }
+      .psy-btn {
+        width: 100%;
+        background: #5f6fff;
+        color: #fff;
+        border: none;
+        padding: 13px 0;
+        border-radius: 22px;
+        font-weight: 700;
+        font-size: 1.1em;
+        margin-top: 8px;
+        margin-bottom: 0;
+        box-shadow: 0 2px 8px rgba(162,89,230,0.10);
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+      }
+      .psy-btn:hover {
+        background: #a259e6;
+        transform: scale(1.03);
+      }
+      @media (max-width: 900px) {
+        .split-container { flex-direction: column; }
+        .left-panel, .right-panel { min-height: 320px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="split-container">
+      <div class="left-panel">
+        <h2>¿Ya tienes cuenta?</h2>
+        <a href="/iniciar_sesion">INICIAR SESIÓN</a>
+      </div>
+      <div class="right-panel">
+        <div class="psy-form-card">
+          <h1>SocialMind</h1>
+          {%if msj_error%}
+            <div class="form-error">{{msj_error}}</div>
+          {%endif%}
+          <form method="POST" action="/registrarse">
+            <input type="email" name="email" id="Mail" class="psy-input" placeholder="Correo institucional" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu\.mx$" required title="Solo se puede registrar con un correo institucional válido">
+            <input type="text" name="nombre" id="Name" class="psy-input" placeholder="Nombre" required>
+            <input type="text" name="apellido_paterno" id="Last_name" class="psy-input" placeholder="Apellido paterno" required>
+            <input type="text" name="apellido_materno" id="Last_name2" class="psy-input" placeholder="Apellido materno" required>
+            <input type="number" name="edad" id="edad" class="psy-input" placeholder="Edad" required min="1" max="120">
+            <select name="genero" id="Genero" class="psy-select" required>
+              <option value="" disabled selected>Selecciona tu género</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Otro">Otro</option>
+            </select>
+            <input type="text" name="username" class="psy-input" placeholder="@tunombredeusuario" pattern="^[a-zA-Z0-9_]+$$" required>
+            <input type="password" name="password" id="Password" class="psy-input" placeholder="Contraseña" required minlength="8">
+            <input type="password" name="password_confirm" id="ConfirmPassword" class="psy-input" placeholder="Confirmar contraseña" required minlength="8">
+            <div class="terms-row">
+              <input type="checkbox" id="terms" name="terms" required>
+              <span>¿Aceptas los <a href="/terms" target="_blank">términos y condiciones</a>?</span>
+            </div>
+            <button type="submit" name="btn_sign" id="Sign" class="psy-btn">Registrarse</button>
+          </form>
+          <script>
+            // Validación de contraseñas iguales
+            document.querySelector('form').addEventListener('submit', function(e) {
+              var pass = document.getElementById('Password').value;
+              var confirm = document.getElementById('ConfirmPassword').value;
+              if (pass !== confirm) {
+                e.preventDefault();
+                alert('Las contraseñas no coinciden.');
+                document.getElementById('ConfirmPassword').focus();
+              }
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
