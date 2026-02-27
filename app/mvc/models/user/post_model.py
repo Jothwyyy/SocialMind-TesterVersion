@@ -28,17 +28,15 @@ def publicaciones_model(id_usuario_actual):
     except Exception as e:
         return {"status": False, "data": None, "error": str(e)}
     
-def crear_publicacion_model(contenido_texto, id_usuario, imagen_path=None):
+def crear_publicacion_model(contenido_texto, id_usuario, url_imagen=None):
     try:
-        if imagen_path:
-            image_response = subir_imagen_model(imagen_path)
-            if not image_response["status"]:
-                return {"status": False, "data": None, "error": f"Error al subir la imagen: {image_response['error']}"}
-            else:
-                image_url = supabase_client.storage.from_("SocialMindMedia").get_public_url(image_response["path"])
-                response = supabase_client.table("publicacion").insert({"contenido_texto": contenido_texto, "id_usuario": id_usuario, "imagen_path": image_url["publicURL"]}).execute()
-        else: 
-            response = supabase_client.table("publicacion").insert({"contenido_texto": contenido_texto, "id_usuario": id_usuario}).execute()
+        data = {
+            "contenido_texto": contenido_texto,
+            "id_usuario": id_usuario
+        }
+        if url_imagen:
+            data["imagen_path"] = url_imagen
+        response = supabase_client.table("publicacion").insert(data).execute()
         if response.data:
             return {"status": True, "data": response.data[0], "error": None} 
         else:

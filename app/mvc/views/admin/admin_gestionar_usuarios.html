@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestionar Usuario - SocialMind</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+
+    <style>
+        .profile-card {
+            border-radius: 16px;
+            border: 2.5px solid #a259e6;
+            box-shadow: 0 4px 24px rgba(162, 89, 230, 0.10), 0 1.5px 8px rgba(0, 0, 0, 0.10);
+            background: #fff;
+        }
+
+        .profile-card .card-header {
+            background: #a259e6;
+            color: #fff;
+            border-radius: 13px 13px 0 0;
+            border: none;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 4px solid #a259e6;
+            margin-top: -60px;
+            border-radius: 50%;
+        }
+
+        .form-label {
+            color: #4b2067;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1.5px solid #e0d7f7;
+            background: #f8f5ff;
+            color: #4b2067;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #a259e6;
+            background: #fff;
+            box-shadow: 0 0 0 0.2rem rgba(162, 89, 230, 0.15);
+        }
+
+        .btn-success {
+            background-color: #a259e6;
+            border-color: #a259e6;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.6rem 1.5rem;
+        }
+
+        .btn-success:hover {
+            background-color: #7c3aed;
+            border-color: #7c3aed;
+        }
+
+        .btn-secondary {
+            background-color: #e0d7f7;
+            border-color: #e0d7f7;
+            color: #4b2067;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.6rem 1.5rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d4c3f1;
+            border-color: #d4c3f1;
+            color: #4b2067;
+        }
+
+        .btn-outline-primary {
+            color: #a259e6;
+            border-color: #a259e6;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #a259e6;
+            border-color: #a259e6;
+            color: #fff;
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: 1.5px solid #ffb3b3;
+            background-color: #ffebee;
+            color: #b71c1c;
+        }
+
+        .alert-warning {
+            border-color: #ffe0b2;
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar" aria-label="Menú principal">
+        <div class="logo" tabindex="0">SocialMind</div>
+        <ul>
+            <li><a href="/home"><span>🏠 Inicio</span></a></li>
+            <li><a href="/admin" class="active" aria-current="page"><span>⚙️ Administración</span></a></li>
+            <li><a href="/logout"><span>🚪 Cerrar sesión</span></a></li>
+        </ul>
+        <div style="flex-grow:1;"></div>
+    </nav>
+
+    <main class="main-content" tabindex="-1">
+        <div class="container py-5" style="max-width: 700px;">
+
+    {% if error %}
+        <div class="alert alert-danger">
+            <strong>Error:</strong> {{ error }}
+        </div>
+
+    {% elif not data_usuario["data"] %}
+        <div class="alert alert-warning">
+            <strong>Aviso:</strong> No hay datos para mostrar.
+        </div>
+
+    {% else %}
+        {% set user = data_usuario["data"] %}
+
+        <form method="POST" enctype="multipart/form-data">
+            
+            <!-- CARD PRINCIPAL -->
+            <div class="card profile-card">
+
+                <!-- BANNER -->
+                <div style="height: 150px; overflow: hidden; position: relative; border-radius: 13px 13px 0 0;">
+                    {% if user["banner_path"] %}
+                        <img src="{{ user["banner_path"] }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                        <img src="/static/default_banner.png" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% endif %}
+                </div>
+
+                <!-- INPUT DE BANNER -->
+                <div class="text-center mt-2">
+                    <label for="banner_path" class="form-label">
+                        Cambiar banner
+                        <input type="file" name="banner_path" id="banner_path" class="form-control mt-1">
+                    </label>
+                </div>
+
+                <!-- FOTO -->
+                <div style="text-align: center; position: relative; z-index: 1;">
+                    {% if user["foto_path"] %}
+                        <img src="{{ user["foto_path"] }}" class="profile-img shadow">
+                    {% else %}
+                        <img src="/static/default_profile.png" class="profile-img shadow">
+                    {% endif %}
+                </div>
+
+                <!-- INPUT DE IMAGEN DE PERFIL -->
+                <div class="text-center mt-2">
+                    <label for="foto_path" class="form-label">
+                        Cambiar foto de perfil
+                        <input type="file" name="foto_path" id="foto_path" class="form-control mt-1">
+                    </label>
+                </div>
+
+                <!-- USERNAME -->
+                <div style="text-align: center; padding: 1.5rem 1rem 0.5rem 1rem;">
+                    <h4 style="color: #4b2067; font-weight: 700; margin-bottom: 0;">{{ user["username"] }}</h4>
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body mt-2">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" name="nombre" class="form-control" value="{{ user['nombre'] }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" value="{{ user['username'] }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido Paterno</label>
+                            <input type="text" name="apellido_paterno" class="form-control" value="{{ user['apellido_paterno'] }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido Materno</label>
+                            <input type="text" name="apellido_materno" class="form-control" value="{{ user['apellido_materno'] }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Correo</label>
+                            <input type="email" name="correo_institucional" class="form-control" value="{{ user['correo_institucional'] }}">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Edad</label>
+                            <input type="number" name="edad" class="form-control" value="{{ user['edad'] }}">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Género</label>
+                            <select name="genero" class="form-select">
+                                <option {{ 'selected' if user['genero']=='Masculino' }}>Masculino</option>
+                                <option {{ 'selected' if user['genero']=='Femenino' }}>Femenino</option>
+                                <option {{ 'selected' if user['genero']=='Otro' }}>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Estado</label>
+                            <select name="estado" class="form-select">
+                                <option value="activo" {{ 'selected' if user['estado']=='activo' }}>Activo</option>
+                                <option value="inactivo" {{ 'selected' if user['estado']=='inactivo' }}>Inactivo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Rol</label>
+                            <select name="rol" class="form-control">
+                                <option value="1" {% if user['id_rol'] == 1 %}selected{% endif %}>Estudiante</option>
+                                <option value="2" {% if user['id_rol'] == 2 %}selected{% endif %}>Psicólogo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Descripción</label>
+                            <textarea name="descripcion" class="form-control" rows="3">
+{{ user['descripcion'] if user['descripcion'] != "None" else "" }}
+                            </textarea>
+                        </div>
+
+                    </div>
+
+                    <!-- BOTONES -->
+                    <div class="mt-4 d-flex justify-content-between">
+
+                        <div>
+                            {% if rol == 4 %}
+                                <a href="/viewpost/usuario/{{ user['id_usuario'] }}" class="btn btn-outline-primary">
+                                    Ver publicaciones
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success">
+                                Guardar cambios
+                            </button>
+
+                            <a href="/admin" class="btn btn-secondary">
+                                Volver
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+    {% endif %}
+
+        </div>
+    </main>
+</body>
+</html>
