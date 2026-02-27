@@ -16,8 +16,8 @@ def iniciar_sesion_controller():
             flash('Login successful!', 'success')
             user_data = current_user_model.usuario_actual_model(email)
             session['email'] = email
-            session['id_usuario'] = user_data["data"]["id_usuario"]  # Store user data in session
-            return redirect(url_for('home.inicio_controller'))  # Redirect to home page
+            session['id_usuario'] = user_data["data"]["id_usuario"] 
+            return redirect(url_for('home.inicio_controller')) 
         else:
             return render_template('iniciar_sesion.html', msj_error=auth["error"])
     

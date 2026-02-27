@@ -51,7 +51,7 @@
               {% if is_self %}
                 <a href="/editar_etiquetas" class="btn btn-primary btn-sm">Editar etiquetas</a>
                 <a href="/editar_perfil" class="btn btn-primary btn-sm">Editar perfil</a>
-                <a href="/solicitudes" class="btn btn-primary btn-sm">Solicitudes</a>
+                <a href="/ver_solicitudes" class="btn btn-primary btn-sm">Solicitudes</a>
                 <a href="/amigos" class="btn btn-primary btn-sm">Amigos</a>
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPublicar">Publicar</button>
 
@@ -80,12 +80,14 @@
                   </div>
                 </div>
               {% else %}
-                {% if chat_id is not None %}
+                {% if chat_id %}
                   <a href="/chat/{{chat_id}}" class="btn btn-primary px-4" style="font-weight:bold;">Ver chat</a>
                 {% else %}
-                  <form method="POST" action="/agregarusuario/{{id_usuario}}" style="display:inline;">
-                    <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
-                  </form>
+                  {%if not solicitud_existente%}
+                    <form method="POST" action="/enviar_solicitud/{{id_usuario}}" style="display:inline;">
+                      <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+                    </form>
+                  {%endif%}
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#miModal">Enviar mensaje</button>
                   <!-- modal mensaje -->
                   <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">

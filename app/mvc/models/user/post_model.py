@@ -5,7 +5,22 @@ supabase_client = get_supabase_client()
 
 def publicaciones_model(id_usuario_actual):
     try:
-        response = supabase_client.table('publicacion').select('*').neq('id_usuario', id_usuario_actual).execute()
+        response = supabase_client.table('publicacion') \
+            .select("""
+                id_publicacion,
+                contenido_texto,
+                fecha_publicacion,
+                imagen_path,
+                cantidad_likes,
+                cantidad_comentarios,
+                id_usuario,
+                usuarios (
+                    username,
+                    foto_path
+                )
+            """) \
+            .neq('id_usuario', id_usuario_actual) \
+            .execute()
         if response.data:
             return {"status": True, "data": response.data, "error": None}  
         else:

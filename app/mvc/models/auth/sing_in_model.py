@@ -48,7 +48,7 @@ def registrarse_in_db_model(
             "correo_institucional": correo_institucional,
             "edad": edad,
             "id_rol": id_rol
-        })
+        }).execute()
         return {
             "error": None,
             "status": True,

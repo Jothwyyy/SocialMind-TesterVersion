@@ -6,6 +6,8 @@ from mvc.controllers.user.nueva_publicacion_controller import nueva_publicacion_
 from mvc.controllers.user.ver_perfil_controller import ver_perfil_bp
 from mvc.controllers.user.etiquetas_controller import etiquetas_bp
 from mvc.controllers.user.editar_perfil_controller import editar_perfil_bp
+from mvc.controllers.user.ver_solicitudes_controller import ver_solicitudes_bp   
+from mvc.controllers.user.enviar_solicitud_controller import enviar_solicitud_bp
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key_123"
@@ -18,6 +20,8 @@ app.register_blueprint(nueva_publicacion_bp)
 app.register_blueprint(ver_perfil_bp)
 app.register_blueprint(etiquetas_bp)
 app.register_blueprint(editar_perfil_bp)
+app.register_blueprint(ver_solicitudes_bp)
+app.register_blueprint(enviar_solicitud_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)
