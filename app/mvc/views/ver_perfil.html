@@ -6,6 +6,177 @@
     <title>Perfil - SocialMind</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .main-content {
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .profile-banner {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        border: none;
+        margin-bottom: 30px !important;
+      }
+
+      .banner-img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+      }
+      .profile-avatar {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-top: -60px;
+        margin-bottom: 60px; /* 🔥 CLAVE */
+        z-index: 10;
+      }
+
+      .profile-avatar img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 5px solid white;
+        object-fit: cover;
+        box-shadow: 0 8px 24px rgba(162, 89, 230, 0.3);
+      }
+
+      .profile-info {
+        text-align: center;
+        padding: 70px 30px 20px;
+      }
+
+      .profile-username {
+        color: #333 !important;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0 0 5px 0;
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        width: 100%;
+      }
+
+      .profile-info .card-text {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+
+      .interests {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .interest-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .button-group .btn {
+        background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .button-group .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(162, 89, 230, 0.3);
+        color: white;
+      }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(162, 89, 230, 0.15);
+      }
+
+      .card-body {
+        padding: 25px;
+      }
+
+      .container {
+        max-width: 700px !important;
+      }
+
+      h4 {
+        color: white !important;
+        font-weight: 700 !important;
+        margin-bottom: 25px !important;
+      }
+
+      .btn-outline-primary,
+      .btn-outline-success,
+      .btn-outline-danger {
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        color: white;
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-primary:hover {
+        background: rgba(162, 89, 230, 0.2);
+        border-color: white;
+      }
+
+      .btn-outline-success:hover {
+        background: rgba(68, 173, 128, 0.2);
+        border-color: white;
+        color: white;
+      }
+
+      .btn-outline-danger:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: white;
+        color: white;
+      }
+
+      .modal-content {
+        border-radius: 16px;
+        border: none;
+      }
+
+      .alert-info {
+        background: linear-gradient(135deg, rgba(162, 89, 230, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border: 2px solid #a259e6;
+        color: #333;
+        border-radius: 12px;
+      }
+    </style>
   </head>
   <body>
     <nav class="sidebar" aria-label="Menú principal">
@@ -36,7 +207,7 @@
             <img src="{% if user_data['foto_path'] %}{{user_data['foto_path']}}{% else %}/static/default_profile.png{% endif %}" alt="Foto de perfil">
           </div>
           <div class="card-body profile-info">
-            <h3 class="card-title">{{ user_data['username'] or 'Usuario' }}</h3>
+            <div class="profile-username">{{ user_data['username'] or 'Usuario' }}</div>
             <p class="card-text text-muted">{% if user_data['descripcion'] %}{{ user_data['descripcion'] }}{% else %}No hay descripción{% endif %}</p>
             <div class="interests mb-3">
               {% if etiquetas %}
@@ -100,7 +271,7 @@
                           </div>
                           <div class="modal-body py-4 px-4">
                             <div class="mb-2" style="font-weight:600; color:#a259e6;">Escribe un mensaje para: $username</div>
-                            <input name="id_usuario_receptor" value="$id_usuario" type="hidden">
+                            <input name="id_usuario_receptor" value={{user_data["id_usuario"]}} type="hidden">
                             <textarea class="form-control" name="inp_mensaje" rows="4" placeholder="Hola, ¿cómo estás?" style="background: #fff; border-color: #a259e6; border-radius: 10px;"></textarea>
                           </div>
                           <div class="modal-footer d-flex justify-content-between" style="background: #f3e8ff; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">

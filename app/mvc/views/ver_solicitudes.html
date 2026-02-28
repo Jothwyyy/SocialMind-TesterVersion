@@ -1,130 +1,251 @@
-<style>
-  body {
-    background: #f3e8ff;
-  }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solicitudes de Amistad - SocialMind</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/style.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
 
-  .center-card {
-    max-width: 520px;
-    margin: 60px auto 0 auto;
-    background: #fff;
-    border-radius: 18px;
-    border: 2.5px solid #a259e6;
-    box-shadow: 0 4px 24px rgba(162, 89, 230, 0.10),
-                0 1.5px 8px rgba(0, 0, 0, 0.10);
-    padding: 36px 36px 28px 36px;
-    text-align: center;
-  }
+    .container-main {
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-  .center-card h1 {
-    color: #a259e6;
-    font-weight: 700;
-    margin-bottom: 18px;
-  }
+    .card-header-custom {
+      background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 16px 16px 0 0;
+    }
 
-  .sol-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 18px;
-    background: #f8f5ff;
-    border-radius: 10px;
-    overflow: hidden;
-  }
+    .card-main {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      border: none;
+    }
 
-  .sol-table th,
-  .sol-table td {
-    padding: 10px 8px;
-    border-bottom: 1px solid #e0d7f7;
-    color: #4b2067;
-    text-align: left;
-  }
+    .card-body {
+      padding: 30px;
+    }
 
-  .sol-table th {
-    background: #e9d5ff;
-    color: #7c3aed;
-    font-weight: 600;
-  }
+    .solicitud-item {
+      background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+      border-left: 4px solid #a259e6;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      transition: all 0.3s ease;
+    }
 
-  .sol-table tr:last-child td {
-    border-bottom: none;
-  }
+    .solicitud-item:hover {
+      box-shadow: 0 8px 24px rgba(162, 89, 230, 0.15);
+      transform: translateX(4px);
+    }
 
-  .sol-btn {
-    background-color: #a259e6;
-    color: #fff;
-    border: none;
-    padding: 7px 18px;
-    border-radius: 6px;
-    font-weight: 600;
-    margin: 0 4px;
-    box-shadow: 0 2px 8px rgba(162, 89, 230, 0.10);
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    font-size: 1em;
-    text-decoration: none;
-    display: inline-block;
-  }
+    .solicitud-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 3px solid #a259e6;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
 
-  .sol-btn:hover {
-    background-color: #7c3aed;
-    transform: scale(1.06);
-  }
+    .solicitud-info {
+      flex: 1;
+    }
 
-  .sol-link {
-    color: #a259e6;
-    text-decoration: underline;
-    margin: 0 10px;
-    font-weight: 500;
-  }
-</style>
+    .solicitud-username {
+      color: #a259e6;
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-decoration: none;
+    }
 
-<div class="center-card">
-  <h1>Solicitudes de amistad</h1>
+    .solicitud-username:hover {
+      text-decoration: underline;
+    }
 
-  <table class="sol-table">
-    <thead>
-      <tr>
-        <th>Usuario</th>
-        <th>Fecha</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
+    .solicitud-fecha {
+      color: #999;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
 
-    <tbody>
-      {% if solicitudes %}
-        {% for solicitud in solicitudes %}
-          <tr>
-            <td>
-              <a class="sol-link"
-                 href="/perfil?id={{ solicitud['usuarios']['id_usuario'] }}">
-                {{ solicitud['usuarios']['username'] }}
-              </a>
-            </td>
+    .solicitud-actions {
+      display: flex;
+      gap: 10px;
+    }
 
-            <td>
-              {{ solicitud['fecha_solicitud'] }}
-            </td>
+    .btn-action {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
 
-            <td>
-              <form method="post">
-                <input type="hidden" name="id_solicitud" value="{{ solicitud['id_amistad'] }}">
-                <button type="submit" name="accion" value="aceptar" class="sol-btn">Aceptar</button>
-                <button type="submit" name="accion" value="rechazar" class="sol-btn">Rechazar</button>
-              </form>
+    .btn-accept {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      color: white;
+    }
 
-            </td>
-          </tr>
-        {% endfor %}
+    .btn-accept:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(74, 222, 128, 0.3);
+    }
 
-      {% else %}
-        <tr>
-          <td colspan="3">
-            No tienes solicitudes pendientes
-          </td>
-        </tr>
-      {% endif %}
-    </tbody>
-  </table>
+    .btn-reject {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+    }
 
-  <a class="sol-btn" href="/ver_perfil/{{id_usuario}}">Volver</a>
-  <a class="sol-btn" href="/logout">Cerrar sesión</a>
-</div>
+    .btn-reject:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .empty-state-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+
+    .empty-state h3 {
+      color: #999;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      color: #bbb;
+    }
+
+    .navbar-bottom {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .btn-nav {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(162, 89, 230, 0.3);
+    }
+
+    .btn-nav:any-link {
+      color: white;
+    }
+
+    .h1-title {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 2.5rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" aria-label="Menú principal">
+    <div class="logo" tabindex="0">SocialMind</div>
+    <button class="btn btn-link p-0 mb-3" data-bs-toggle="modal" data-bs-target="#modalNotificaciones" style="color:#a259e6; font-size:2rem;" aria-label="Ver notificaciones">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+        <path d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14.804a1 1 0 0 0-1.208 0C5.255 2.412 2 5.07 2 9c0 .628-.134 1.197-.364 1.684A1.007 1.007 0 0 0 2.001 12h11.998a1.007 1.007 0 0 0 .365-1.316C14.134 10.197 14 9.628 14 9c0-3.93-3.255-6.588-5.896-7.804z"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="/home"><span>🏠 Inicio</span></a></li>
+      <li><a href="/perfil" class="active"><span>👤 Mi Perfil</span></a></li>
+      <li><a href="/chats"><span>💬 Mensajes</span></a></li>
+      <li><a href="/grupos"><span>👥 Grupos</span></a></li>
+      <li><a href="/sugerencias"><span>💡 Sugerencias</span></a></li>
+    </ul>
+    <a href="/logout"><button class="btn_logout">Cerrar sesión</button></a>
+  </nav>
+
+  <div class="container-main">
+    <h1 class="h1-title">📬 Solicitudes de Amistad</h1>
+
+    <div class="card-main">
+      <div class="card-header-custom">
+        <h2 style="margin: 0; font-weight: 700;">Mis Solicitudes</h2>
+        <p style="margin: 5px 0 0 0; opacity: 0.95;">Gestiona tus solicitudes pendientes</p>
+      </div>
+
+      <div class="card-body">
+        {% if solicitudes %}
+          {% for solicitud in solicitudes %}
+            <form method="post" style="display: contents;">
+              <div class="solicitud-item">
+                <img 
+                  src="{{ solicitud['usuarios']['foto_path'] if solicitud['usuarios']['foto_path'] else '/static/default_profile.png' }}" 
+                  alt="Foto"
+                  class="solicitud-avatar"
+                >
+                <div class="solicitud-info">
+                  <a class="solicitud-username" href="/ver_perfil/{{ solicitud['usuarios']['id_usuario'] }}">
+                    {{ solicitud['usuarios']['username'] }}
+                  </a>
+                  <div class="solicitud-fecha">
+                    📅 {{ solicitud['fecha_solicitud'] }}
+                  </div>
+                </div>
+                <div class="solicitud-actions">
+                  <input type="hidden" name="id_solicitud" value="{{ solicitud['id_amistad'] }}">
+                  <button type="submit" name="accion" value="aceptar" class="btn-action btn-accept">✓ Aceptar</button>
+                  <button type="submit" name="accion" value="rechazar" class="btn-action btn-reject">✕ Rechazar</button>
+                </div>
+              </div>
+            </form>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3>No tienes solicitudes pendientes</h3>
+            <p>¡Sorprende a tus amigos con una solicitud!</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="navbar-bottom">
+      <a href="/ver_perfil/{{id_usuario}}" class="btn-nav">← Volver al Perfil</a>
+      <a href="/home" class="btn-nav">🏠 Inicio</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

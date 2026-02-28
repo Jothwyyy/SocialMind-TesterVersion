@@ -1,155 +1,411 @@
-<style>
-  body {
-    background: #f3e8ff;
-  }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editar Perfil - SocialMind</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/style.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
 
-  .center-card {
-    max-width: 440px;
-    margin: 60px auto 0 auto;
-    background: #fff;
-    border-radius: 18px;
-    border: 2.5px solid #a259e6;
-    box-shadow: 0 4px 24px rgba(162,89,230,0.10), 0 1.5px 8px rgba(0,0,0,0.10);
-    padding: 36px 36px 28px 36px;
-    text-align: center;
-  }
+    .main-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
 
-  .center-card h1 {
-    color: #a259e6;
-    font-weight: 700;
-    margin-bottom: 18px;
-  }
+    .card-wrapper {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
 
-  .center-card label {
-    display: block;
-    margin: 12px 0 4px 0;
-    color: #7c3aed;
-    font-weight: 500;
-    text-align: left;
-  }
+    .card-header {
+      background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
 
-  .center-card input[type="text"] {
-    width: 100%;
-    padding: 7px 12px;
-    border-radius: 8px;
-    border: 1.5px solid #a259e6;
-    margin-bottom: 8px;
-    font-size: 1em;
-    background: #f3e8ff;
-    color: #4b2067;
-  }
+    .card-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
 
-  .center-card input[type="file"] {
-    margin-bottom: 10px;
-  }
+    .card-header p {
+      margin: 10px 0 0 0;
+      opacity: 0.95;
+      font-size: 0.95rem;
+    }
 
-  .center-card button {
-    background-color: #a259e6;
-    color: #fff;
-    border: none;
-    padding: 10px 28px;
-    border-radius: 6px;
-    font-weight: 600;
-    margin-top: 18px;
-    box-shadow: 0 2px 8px rgba(162,89,230,0.10);
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    font-size: 1.1em;
-  }
+    .card-body {
+      padding: 40px 30px;
+    }
 
-  .center-card button:hover {
-    background-color: #7c3aed;
-    transform: scale(1.06);
-  }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
 
-  .center-card .img-preview {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 8px;
-    border: 2px solid #a259e6;
-  }
+    .form-group {
+      margin-bottom: 28px;
+    }
 
-  .center-card .cancel-link {
-    color: #a259e6;
-    text-decoration: underline;
-    display: inline-block;
-    margin-bottom: 18px;
-    font-weight: 500;
-  }
-</style>
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
 
-<div class="center-card">
-  <a href="/ver_perfil/{{ current_user_data['data']['id_usuario'] }}" class="cancel-link">
-    Cancelar
-  </a>
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea,
+    .form-group input[type="file"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: #fafafa;
+      box-sizing: border-box;
+    }
 
-  <h1>Editar perfil</h1>
+    .form-group input[type="text"]:focus,
+    .form-group input[type="email"]:focus,
+    .form-group textarea:focus,
+    .form-group input[type="file"]:focus {
+      outline: none;
+      border-color: #a259e6;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(162, 89, 230, 0.1);
+    }
 
-  {% if current_user_data.get('error') is not none %}
-    <div style="color:#b91c1c; font-weight:600; margin-bottom:12px;">
-      {{ current_user_data['error'] }}
+    .form-group input[readonly] {
+      background: #f3e8ff;
+      color: #7c3aed;
+      cursor: not-allowed;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #f3e8ff;
+      color: #a259e6;
+      border: 2px dashed #a259e6;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+      text-align: center;
+    }
+
+    .file-input-label:hover {
+      background: #ede9fe;
+      border-color: #764ba2;
+    }
+
+    .image-preview {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 12px;
+      border: 3px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    .image-preview img:hover {
+      border-color: #a259e6;
+      box-shadow: 0 8px 20px rgba(162, 89, 230, 0.2);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-row-full {
+      grid-column: 1 / -1;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(162, 89, 230, 0.3);
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(162, 89, 230, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-cancel {
+      background: transparent;
+      color: #a259e6;
+      border: 2px solid #a259e6;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+      display: inline-block;
+      margin-top: 15px;
+    }
+
+    .btn-cancel:hover {
+      background: #f3e8ff;
+      transform: translateY(-2px);
+    }
+
+    .section-divider {
+      border-top: 2px solid #e5e7eb;
+      margin: 30px 0 20px 0;
+      padding-top: 20px;
+    }
+
+    .section-title {
+      color: #a259e6;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border-left: 4px solid #b91c1c;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" aria-label="Menú principal">
+    <div class="logo" tabindex="0">SocialMind</div>
+    <button class="btn btn-link p-0 mb-3" data-bs-toggle="modal" data-bs-target="#modalNotificaciones" style="color:#a259e6; font-size:2rem;" aria-label="Ver notificaciones">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+        <path d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14.804a1 1 0 0 0-1.208 0C5.255 2.412 2 5.07 2 9c0 .628-.134 1.197-.364 1.684A1.007 1.007 0 0 0 2.001 12h11.998a1.007 1.007 0 0 0 .365-1.316C14.134 10.197 14 9.628 14 9c0-3.93-3.255-6.588-5.896-7.804z"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="/home"><span>🏠 Inicio</span></a></li>
+      <li><a href="/perfil" class="active"><span>👤 Mi Perfil</span></a></li>
+      <li><a href="/chats"><span>💬 Mensajes</span></a></li>
+      <li><a href="/grupos"><span>👥 Grupos</span></a></li>
+      <li><a href="/sugerencias"><span>💡 Sugerencias</span></a></li>
+    </ul>
+    <a href="/logout"><button class="btn_logout">Cerrar sesión</button></a>
+  </nav>
+
+  <div class="main-container">
+    <div class="card-wrapper">
+      <div class="card-header">
+        <h1>✏️ Editar Perfil</h1>
+        <p>Actualiza tu información personal</p>
+      </div>
+
+      <div class="card-body">
+        {% if current_user_data.get('error') is not none %}
+          <div class="error-message">
+            {{ current_user_data['error'] }}
+          </div>
+        {% elif not current_user_data.get('data') %}
+          <div class="error-message">
+            No hay información para mostrar.
+          </div>
+        {% else %}
+          <form method="POST" enctype="multipart/form-data">
+            <!-- Información de Usuario -->
+            <div class="section-title">👤 Información de Cuenta</div>
+
+            <div class="form-group">
+              <label for="username">Nombre de Usuario</label>
+              <input 
+                type="text" 
+                id="username"
+                name="username" 
+                value="{{ current_user_data['data']['username'] }}" 
+                required
+              >
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input 
+                  type="text" 
+                  id="nombre"
+                  name="inp_nombre" 
+                  value="{{ current_user_data['data']['nombre'] }}" 
+                  readonly
+                >
+              </div>
+              <div class="form-group">
+                <label for="apellido_paterno">Apellido Paterno</label>
+                <input 
+                  type="text" 
+                  id="apellido_paterno"
+                  name="inp_apellido_paterno" 
+                  value="{{ current_user_data['data']['apellido_paterno'] }}" 
+                  readonly
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="apellido_materno">Apellido Materno</label>
+              <input 
+                type="text" 
+                id="apellido_materno"
+                name="inp_apellido_materno" 
+                value="{{ current_user_data['data']['apellido_materno'] }}" 
+                readonly
+              >
+            </div>
+
+            <!-- Descripción Personal -->
+            <div class="section-divider">
+              <div class="section-title">📝 Descripción</div>
+            </div>
+
+            <div class="form-group">
+              <label for="descripcion">Acerca de ti</label>
+              <textarea 
+                id="descripcion"
+                name="descripcion" 
+                required
+              >{{ current_user_data['data']['descripcion'] }}</textarea>
+            </div>
+
+            <!-- Imágenes de Perfil -->
+            <div class="section-divider">
+              <div class="section-title">🖼️ Galería</div>
+            </div>
+
+            <div class="form-group">
+              <label>Foto de Perfil</label>
+              <div class="file-input-wrapper">
+                <input 
+                  type="file" 
+                  id="imagen_perfil"
+                  name="imagen_perfil" 
+                  accept="image/*"
+                  onchange="previewImage(this, 'preview_foto_perfil')"
+                >
+                <label for="imagen_perfil" class="file-input-label">
+                  📤 Selecciona una foto de perfil
+                </label>
+              </div>
+              <div class="image-preview" id="preview_foto_perfil">
+                {% if current_user_data['data'].get('imagen_perfil') %}
+                  <img src="{{ current_user_data['data']['imagen_path'] }}" alt="Foto de perfil">
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Imagen de Banner</label>
+              <div class="file-input-wrapper">
+                <input 
+                  type="file" 
+                  id="imagen_banner"
+                  name="imagen_banner" 
+                  accept="image/*"
+                  onchange="previewImage(this, 'preview_banner')"
+                >
+                <label for="imagen_banner" class="file-input-label">
+                  📤 Selecciona una imagen de banner
+                </label>
+              </div>
+              <div class="image-preview" id="preview_banner">
+                {% if current_user_data['data'].get('imagen_banner') %}
+                  <img src="{{ current_user_data['data']['banner_path'] }}" alt="Banner">
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <button type="submit" name="btn_actualizar" class="btn-submit">💾 Guardar Cambios</button>
+            <a href="/ver_perfil/{{ current_user_data['data']['id_usuario'] }}" class="btn-cancel">← Volver al Perfil</a>
+          </form>
+        {% endif %}
+      </div>
     </div>
+  </div>
 
-  {% elif not current_user_data.get('data') %}
-    <div style="color:#b91c1c; font-weight:600; margin-bottom:12px;">
-      No hay información para mostrar.
-    </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function previewImage(input, previewId) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const previewDiv = document.getElementById(previewId);
+          previewDiv.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
 
-  {% else %}
-    <form method="POST" action="" enctype="multipart/form-data">
-
-      <label>Nombre de usuario:</label>
-      <input type="text" name="username"
-             value="{{ current_user_data['data']['username'] }}" required>
-
-      <label>Nombre:</label>
-      <input type="text" name="inp_nombre"
-             value="{{ current_user_data['data']['nombre'] }}" readonly>
-
-      <label>Apellido paterno:</label>
-      <input type="text" name="inp_apellido_paterno"
-             value="{{ current_user_data['data']['apellido_paterno'] }}" readonly>
-
-      <label>Apellido materno:</label>
-      <input type="text" name="inp_apellido_materno"
-             value="{{ current_user_data['data']['apellido_materno'] }}" readonly>
-
-      <label>Descripción:</label>
-      <input type="text" name="descripcion"
-             value="{{ current_user_data['data']['descripcion'] }}" required>
-
-      <!-- Imagen de perfil -->
-      <label>Imagen de perfil:</label>
-      {% if current_user_data['data'].get('imagen_perfil') %}
-        <img src="{{ current_user_data['data']['imagen_path'] }}"
-             alt="Foto de perfil"
-             class="img-preview">
-      {% else %}
-        <div style="color:#a259e6; margin-bottom:8px;">
-          Sin foto de perfil
-        </div>
-      {% endif %}
-      <input type="file" name="imagen_perfil" accept="image/*">
-
-      <!-- Banner -->
-      <label>Banner:</label>
-      {% if current_user_data['data'].get('imagen_banner') %}
-        <img src="{{ current_user_data['data']['banner_path'] }}"
-             alt="Banner"
-             style="border-radius:12px; width:100%; height:60px; object-fit:cover;">
-      {% else %}
-        <div style="color:#a259e6; margin-bottom:8px;">
-          Sin banner
-        </div>
-      {% endif %}
-      <input type="file" name="imagen_banner" accept="image/*">
-
-      <button type="submit" name="btn_actualizar">
-        Actualizar
-      </button>
-
-    </form>
-  {% endif %}
-</div>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animación suave de campos de entrada
+      const inputs = document.querySelectorAll('input[type="text"], textarea');
+      inputs.forEach(input => {
+        if (!input.readOnly) {
+          input.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.01)';
+          });
+          input.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

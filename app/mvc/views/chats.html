@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chats - SocialMind</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .main-content {
+        padding: 40px 20px;
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+        color: white;
+      }
+
+      .page-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .page-header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+      }
+
+      .chats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .chat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+        border: 2px solid transparent;
+        text-decoration: none !important;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .chat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(162, 89, 230, 0.2);
+        border-color: #a259e6;
+      }
+
+      .chat-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        flex-shrink: 0;
+      }
+
+      .chat-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .chat-info h5 {
+        margin: 0;
+        color: #a259e6;
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .chat-info p {
+        margin: 4px 0 0 0;
+        color: #999;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .chat-icon {
+        font-size: 32px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: white;
+      }
+
+      .empty-state-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.8;
+      }
+
+      .empty-state h2 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+      }
+
+      .empty-state p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .error-alert {
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      @media (max-width: 768px) {
+        .page-header h1 {
+          font-size: 2rem;
+        }
+
+        .chats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="sidebar" aria-label="Menú principal">
+      <div class="logo" tabindex="0">SocialMind</div>
+      <button class="btn btn-link p-0 mb-3" data-bs-toggle="modal" data-bs-target="#modalNotificaciones" style="color:#a259e6; font-size:2rem;" aria-label="Ver notificaciones">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+          <path d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14.804a1 1 0 0 0-1.208 0C5.255 2.412 2 5.07 2 9c0 .628-.134 1.197-.364 1.684A1.007 1.007 0 0 0 2.001 12h11.998a1.007 1.007 0 0 0 .365-1.316C14.134 10.197 14 9.628 14 9c0-3.93-3.255-6.588-5.896-7.804z"/>
+        </svg>
+      </button>
+      <ul>
+        <li><a href="/home"><span>🏠 Inicio</span></a></li>
+        <li><a href="/perfil"><span>👤 Mi Perfil</span></a></li>
+        <li><a href="/chats" class="active" aria-current="page"><span>💬 Mensajes</span></a></li>
+        <li><a href="/grupos"><span>👥 Grupos</span></a></li>
+        <li><a href="/sugerencias"><span>💡 Sugerencias</span></a></li>
+      </ul>
+      <a href="/logout"><button class="btn_logout" aria-label="btn_logout">Cerrar sesión</button></a>
+    </nav>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1>💬 Mensajes</h1>
+        <p>Tus conversaciones recientes</p>
+      </div>
+
+      {%if chats["error"]%}
+        <div class="error-alert">
+          <strong>Error:</strong> {{chats["error"]}}
+        </div>
+      {%elif not chats["data"]%}
+        <div class="empty-state">
+          <div class="empty-state-icon">💬</div>
+          <h2>Aún no tienes chats</h2>
+          <p>¡Comienza a conversar con tus amigos!</p>
+        </div>
+      {%else%}
+        <div class="chats-grid">
+          {%for chat in chats["data"]%}
+            <a href="/chat/{{chat['id_chat']}}" class="chat-card">
+              <div class="chat-avatar">
+                👤
+              </div>
+              <div class="chat-info">
+                <h5>{{ chat['username'] }}</h5>
+                <p>Haz clic para chatear</p>
+              </div>
+              <div class="chat-icon">💬</div>
+            </a>
+          {%endfor%}
+        </div>
+      {%endif%}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,108 +1,238 @@
-<style>
-  body { background: #f3e8ff; }
-  .center-card {
-    max-width: 420px;
-    margin: 60px auto 0 auto;
-    background: #fff;
-    border-radius: 18px;
-    border: 2.5px solid #a259e6;
-    box-shadow: 0 4px 24px rgba(162,89,230,0.10), 0 1.5px 8px rgba(0,0,0,0.10);
-    padding: 32px 32px 24px 32px;
-    text-align: center;
-  }
-  .center-card h1 {
-    color: #a259e6;
-    font-weight: 700;
-    margin-bottom: 24px;
-  }
-  .center-card label {
-    display: inline-block;
-    margin: 5px 12px 5px 0;
-  }
-  .center-card button {
-    background-color: #a259e6;
-    color: #fff;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-weight: 600;
-    margin-top: 10px;
-    box-shadow: 0 2px 8px rgba(162,89,230,0.10);
-    cursor: pointer;
-    animation: pulse 1.2s infinite;
-    transition: background 0.2s, transform 0.2s;
-  }
-  .center-card button:hover {
-    background-color: #7c3aed;
-    transform: scale(1.06);
-  }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(162,89,230,0.25); }
-    70% { box-shadow: 0 0 0 10px rgba(162,89,230,0.05); }
-    100% { box-shadow: 0 0 0 0 rgba(162,89,230,0.0); }
-  }
-  .center-card a {
-    color: #a259e6;
-    text-decoration: underline;
-    display: inline-block;
-    margin-top: 18px;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editar Etiquetas - SocialMind</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/style.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-<div class="center-card">
-  <h1>Editar Etiquetas</h1>
-  <form method="POST">
-    <div style="margin-bottom:18px;">
-      {%for interes in etiquetas %}
-        <label style="display:inline-block; margin:4px 6px 4px 0; cursor:pointer;">
-          <input type="checkbox" 
-            name="etiquetas"
-            value="{{ interes.id_interes }}" 
-            {% if interes.id_interes in tags_usuario %}checked{% endif %}>
-          <span class="etiqueta-btn">{{ interes.tipo_interes.capitalize() }}</span>
-        </label>
-      {%endfor%}
-</style>
-<style>
-  .etiqueta-btn {
-    display:inline-block;
-    background:#f3e8ff;
-    color:#7c3aed;
-    padding:4px 14px;
-    border-radius:20px;
-    font-size:0.95em;
-    border:1px solid #a259e6;
-    transition:all 0.2s;
-    font-weight:500;
-    user-select:none;
-  }
-</style>
+    .main-container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .card-wrapper {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .card-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .card-header p {
+      margin: 10px 0 0 0;
+      opacity: 0.95;
+      font-size: 0.95rem;
+    }
+
+    .card-body {
+      padding: 40px 30px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .etiquetas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .etiqueta-wrapper {
+      display: flex;
+    }
+
+    .etiqueta-wrapper input[type="checkbox"] {
+      display: none;
+    }
+
+    .etiqueta-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #a259e6;
+      border-radius: 12px;
+      background: #f3e8ff;
+      color: #a259e6;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      text-align: center;
+    }
+
+    .etiqueta-wrapper input[type="checkbox"]:checked + .etiqueta-btn {
+      background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+      color: white;
+      border-color: #764ba2;
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(162, 89, 230, 0.3);
+    }
+
+    .etiqueta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(162, 89, 230, 0.2);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #a259e6 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(162, 89, 230, 0.3);
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(162, 89, 230, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-cancel {
+      background: transparent;
+      color: #a259e6;
+      border: 2px solid #a259e6;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+      display: inline-block;
+      margin-top: 15px;
+    }
+
+    .btn-cancel:hover {
+      background: #f3e8ff;
+      transform: translateY(-2px);
+    }
+
+    .selection-badge {
+      text-align: center;
+      background: linear-gradient(135deg, #f3e8ff 0%, #f0e5ff 100%);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      color: #a259e6;
+      font-weight: 600;
+      display: none;
+    }
+
+    .selection-badge.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" aria-label="Menú principal">
+    <div class="logo" tabindex="0">SocialMind</div>
+    <button class="btn btn-link p-0 mb-3" data-bs-toggle="modal" data-bs-target="#modalNotificaciones" style="color:#a259e6; font-size:2rem;" aria-label="Ver notificaciones">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+        <path d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14.804a1 1 0 0 0-1.208 0C5.255 2.412 2 5.07 2 9c0 .628-.134 1.197-.364 1.684A1.007 1.007 0 0 0 2.001 12h11.998a1.007 1.007 0 0 0 .365-1.316C14.134 10.197 14 9.628 14 9c0-3.93-3.255-6.588-5.896-7.804z"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="/home"><span>🏠 Inicio</span></a></li>
+      <li><a href="/perfil" class="active"><span>👤 Mi Perfil</span></a></li>
+      <li><a href="/chats"><span>💬 Mensajes</span></a></li>
+      <li><a href="/grupos"><span>👥 Grupos</span></a></li>
+      <li><a href="/sugerencias"><span>💡 Sugerencias</span></a></li>
+    </ul>
+    <a href="/logout"><button class="btn_logout">Cerrar sesión</button></a>
+  </nav>
+
+  <div class="main-container">
+    <div class="card-wrapper">
+      <div class="card-header">
+        <h1>🏷️ Mis Intereses</h1>
+        <p>Selecciona tus etiquetas favoritas</p>
+      </div>
+
+      <div class="card-body">
+        <form method="POST">
+          <div class="selection-badge" id="selectionBadge">
+            <span id="selectedCount">0</span> etiquetas seleccionadas
+          </div>
+
+          <div class="etiquetas-grid">
+            {%for interes in etiquetas %}
+              <label class="etiqueta-wrapper">
+                <input 
+                  type="checkbox" 
+                  name="etiquetas"
+                  value="{{ interes.id_interes }}" 
+                  {% if interes.id_interes in tags_usuario %}checked{% endif %}
+                >
+                <span class="etiqueta-btn">{{ interes.tipo_interes.capitalize() }}</span>
+              </label>
+            {%endfor%}
+          </div>
+
+          <button type="submit" class="btn-submit">💾 Guardar Etiquetas</button>
+          <a href="/ver_perfil/{{ id_usuario }}" class="btn-cancel">← Volver al Perfil</a>
+        </form>
+      </div>
     </div>
-    <button type="submit">Guardar etiquetas</button>
-  </form>
-<script>
-// Resalta la etiqueta seleccionada
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.center-card label').forEach(function(label) {
-    var input = label.querySelector('input[type="checkbox"]');
-    var span = label.querySelector('span');
-    if(input && span) {
-      function update() {
-        if(input.checked) {
-          span.style.background = '#a259e6';
-          span.style.color = '#fff';
-          span.style.borderColor = '#7c3aed';
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkboxes = document.querySelectorAll('.etiqueta-wrapper input[type="checkbox"]');
+      const selectionBadge = document.getElementById('selectionBadge');
+      const selectedCount = document.getElementById('selectedCount');
+
+      function updateSelection() {
+        const checked = document.querySelectorAll('.etiqueta-wrapper input[type="checkbox"]:checked').length;
+        selectedCount.textContent = checked;
+        
+        if (checked > 0) {
+          selectionBadge.classList.add('active');
         } else {
-          span.style.background = '#f3e8ff';
-          span.style.color = '#7c3aed';
-          span.style.borderColor = '#a259e6';
+          selectionBadge.classList.remove('active');
         }
       }
-      input.addEventListener('change', update);
-      update();
-    }
-  });
-});
-</script>
-  <a href="/ver_perfil/{{ id_usuario }}">Volver a perfil</a>
-</div>
+
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelection);
+      });
+
+      updateSelection();
+    });
+  </script>
+</body>
+</html>
