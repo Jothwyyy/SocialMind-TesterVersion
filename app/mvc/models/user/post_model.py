@@ -43,6 +43,23 @@ def crear_publicacion_model(contenido_texto, id_usuario, url_imagen=None):
             return {"status": False, "data": None, "error": "No se pudo crear la publicación"}
     except Exception as e:
         return {"status": False, "data": None, "error": str(e)}
+
+def crear_publicacion_grupo_model(contenido_texto, id_usuario, id_grupo, url_imagen=None):
+    try:
+        data = {
+            "contenido_texto": contenido_texto,
+            "id_usuario": id_usuario,
+            "id_grupo": id_grupo
+        }
+        if url_imagen:
+            data["imagen_path"] = url_imagen
+        response = supabase_client.table("publicacion").insert(data).execute()
+        if response.data:
+            return {"status": True, "data": response.data[0], "error": None} 
+        else:
+            return {"status": False, "data": None, "error": "No se pudo crear la publicación"}
+    except Exception as e:
+        return {"status": False, "data": None, "error": str(e)}
     
 def publicaciones_otros_usuarios_model(id_usuario):
     try:

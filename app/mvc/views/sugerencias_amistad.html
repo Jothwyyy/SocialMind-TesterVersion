@@ -1,0 +1,92 @@
+<style>
+  body { background: #f3e8ff; }
+  .center-card {
+    max-width: 520px;
+    margin: 60px auto 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    border: 2.5px solid #a259e6;
+    box-shadow: 0 4px 24px rgba(162,89,230,0.10), 0 1.5px 8px rgba(0,0,0,0.10);
+    padding: 36px 36px 28px 36px;
+    text-align: center;
+  }
+  .center-card h1 {
+    color: #a259e6;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .sug-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 18px;
+    background: #f8f5ff;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .sug-table th, .sug-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e0d7f7;
+    color: #4b2067;
+    text-align: left;
+  }
+  .sug-table th {
+    background: #e9d5ff;
+    color: #7c3aed;
+    font-weight: 600;
+  }
+  .sug-table tr:last-child td {
+    border-bottom: none;
+  }
+  .sug-btn {
+    background-color: #a259e6;
+    color: #fff;
+    border: none;
+    padding: 7px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin: 0 4px;
+    box-shadow: 0 2px 8px rgba(162,89,230,0.10);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    font-size: 1em;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .sug-btn:hover {
+    background-color: #7c3aed;
+    transform: scale(1.06);
+  }
+</style>
+<div class="center-card">
+  <h1>Sugerencias de usuarios</h1>
+  {%if usuarios["data"]%}
+    <table class="sug-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Usuario</th>
+          <th style="width: 120px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for usuario in usuarios["data"]%}
+          <tr>
+            <td style="width:54px;">
+              <img src="{{usuario['foto_path']}}" alt="Foto perfil" style="width:44px; height:44px; object-fit:cover; border-radius:50%; border:2px solid #a259e6;">
+            </td>
+            <td style="font-weight: 500; vertical-align:middle;">{{usuario["username"]}}</td>
+            <td>
+              <a href="/ver_perfil/{{usuario['id_usuario']}}" class="sug-btn">Ver perfil</a>
+            </td>
+          </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  {%else%}
+    <div class="alert alert-info mb-0">No hay sugerencias de usuarios por ahora.</div>
+  {%endif%}
+  <div class="d-flex justify-content-between mt-3">
+    <a href="/inicio" class="btn btn-outline-primary btn-sm">Inicio</a>
+    <a href="/logout" class="btn btn-outline-danger btn-sm">Cerrar sesión</a>
+  </div>
+</div>

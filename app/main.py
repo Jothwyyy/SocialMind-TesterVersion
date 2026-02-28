@@ -3,6 +3,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from mvc.controllers.auth.login_controller import iniciar_sesion_bp
 from mvc.controllers.auth.sign_in_controller import registrarse_bp
 from mvc.controllers.user.home_controller import home_bp
+from mvc.controllers.user.nueva_publicacion_grupo_controller import nueva_publicacion_grupo_bp
 from mvc.controllers.user.nueva_publicacion_controller import nueva_publicacion_bp
 from mvc.controllers.user.ver_perfil_controller import ver_perfil_bp
 from mvc.controllers.user.etiquetas_controller import etiquetas_bp
@@ -14,6 +15,10 @@ from mvc.controllers.admin.admin_gestionar_usuario_controller import admin_gesti
 from mvc.controllers.user.chat_controller import chat_controler_bp
 from mvc.controllers.user.crear_chat_controller import crear_chat_bp
 from mvc.models.user import mensajes_model
+from mvc.controllers.user.ver_grupos_controller import ver_grupos_bp
+from mvc.controllers.user.crear_grupo_controller import crear_grupo_bp
+from mvc.controllers.user.ver_grupo_controller import ver_grupo_bp
+from mvc.controllers.user.sugerencias_amistad_controller import sugerencias_amistad_bp
 from datetime import datetime
 
 app = Flask(__name__)
@@ -26,6 +31,7 @@ app.register_blueprint(iniciar_sesion_bp)
 app.register_blueprint(registrarse_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(nueva_publicacion_bp)
+app.register_blueprint(nueva_publicacion_grupo_bp)
 app.register_blueprint(ver_perfil_bp)
 app.register_blueprint(etiquetas_bp)
 app.register_blueprint(editar_perfil_bp)
@@ -35,6 +41,10 @@ app.register_blueprint(ver_amigos_bp)
 app.register_blueprint(admin_gestionar_usuario_bp)
 app.register_blueprint(chat_controler_bp)
 app.register_blueprint(crear_chat_bp)
+app.register_blueprint(ver_grupos_bp)
+app.register_blueprint(ver_grupo_bp)
+app.register_blueprint(crear_grupo_bp)
+app.register_blueprint(sugerencias_amistad_bp)
 
 # ===== WEBSOCKET HANDLERS =====
 user_connections = {}

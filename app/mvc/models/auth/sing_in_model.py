@@ -43,7 +43,7 @@ def registrarse_in_db_model(
             "nombre": nombre,
             "apellido_paterno": apellido_paterno,
             "apellido_materno": apellido_materno,
-            "username": username,
+            "username": f"@{username}",
             "genero": genero,
             "correo_institucional": correo_institucional,
             "edad": edad,

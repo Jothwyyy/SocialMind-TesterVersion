@@ -2,6 +2,16 @@ from mvc.models.supabase_client import get_supabase_client
 
 supabase_client = get_supabase_client()
 
+def obtener_todos_los_usuarios_model(id_usuario):
+    try:
+        response = supabase_client.table("usuarios").select("*").neq("id_usuario", id_usuario).execute()
+        if response.data:
+            return {"status": True, "data": response.data, "error": None}  
+        else:
+            return {"status": False, "data": None, "error": "No se pudo obtener los usuarios"}
+    except Exception as e:
+        return {"status": False, "data": None, "error": str(e)}
+
 def obtener_usuario_por_id_model(id_usuario):
     try:
         response = supabase_client.table('usuarios').select('*').eq('id_usuario', id_usuario).execute()

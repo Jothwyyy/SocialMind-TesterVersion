@@ -6,7 +6,7 @@ chat_controler_bp = Blueprint('chats', __name__, template_folder='../../views')
 def ver_chats_controller():
     chats = chats_model.obtener_chats_usuario(session["id_usuario"])
     print(chats)
-    return render_template('chats.html', chats=chats)
+    return render_template('chats.html', chats=chats, id_usuario=session["id_usuario"])
 
 @chat_controler_bp.route('/chat/<int:id_chat>', methods=['GET'])
 def ver_chat_controller(id_chat):
